@@ -1,0 +1,70 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_height="match_parent"
+    tools:context=".MainActivity"
+    android:id="@+id/layout">
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"  >
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+
+
+
+
+
+            <android.support.v4.widget.DrawerLayout
+                android:id="@+id/drawer"
+
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" >
+
+                <LinearLayout
+                    android:orientation="vertical"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <include
+
+                        layout="@layout/toolbar"
+                        >
+                    </include>
+                    <!-- 内容界面 -->
+                    <FrameLayout
+                        android:orientation="horizontal"
+                        android:id="@+id/fragment_layout"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent">
+
+
+                    </FrameLayout>
+                </LinearLayout>
+
+
+                <!-- 侧滑菜单内容 -->
+                <LinearLayout
+                    android:clickable="true"
+                    android:id="@+id/drawer_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="start"
+                    android:background="@color/white"
+                    >
+                    <include
+                        layout="@layout/menu_layout"
+                        ></include>
+                </LinearLayout>
+            </android.support.v4.widget.DrawerLayout>
+
+        </LinearLayout>
+    </LinearLayout>
+
+
+</RelativeLayout>

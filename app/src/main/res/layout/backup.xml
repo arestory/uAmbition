@@ -1,0 +1,65 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainActivity"
+    android:id="@+id/layout">
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"  >
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <include
+
+                layout="@layout/toolbar"
+                >
+            </include>
+
+
+
+
+            <android.support.v4.widget.DrawerLayout
+                android:id="@+id/drawer"
+
+
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" >
+
+                <FrameLayout
+                    android:orientation="horizontal"
+                    android:id="@+id/fragment_layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+
+                </FrameLayout>
+
+                <!-- 内容界面 -->
+
+                <!-- 侧滑菜单内容 -->
+
+                <LinearLayout
+                    android:clickable="true"
+                    android:background="#fffccc"
+                    android:id="@+id/drawer_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="start"
+
+                    >
+                    <include
+                        layout="@layout/menu_layout"
+                        ></include>
+                </LinearLayout>
+            </android.support.v4.widget.DrawerLayout>
+
+        </LinearLayout>
+    </LinearLayout>
+
+
+</RelativeLayout>

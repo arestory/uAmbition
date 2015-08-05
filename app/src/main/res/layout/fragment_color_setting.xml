@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+
+
+    <RadioGroup
+        android:visibility="gone"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:gravity="center"
+        android:id="@+id/color_group"
+        android:layout_height="wrap_content">
+
+        <RadioButton
+            android:id="@+id/theme_color_btn"
+            android:text="橙色"
+            android:checked="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+        <RadioButton
+            android:id="@+id/diy_color_btn"
+            android:text="自定义颜色"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+    </RadioGroup>
+    <LinearLayout
+        android:layout_below="@+id/color_group"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <uambition.ares.ywq.uambition.view.holocolorpicker.ColorPicker
+            android:id="@+id/color_picker"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+        <uambition.ares.ywq.uambition.view.holocolorpicker.SVBar
+            android:id="@+id/svbar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+        <uambition.ares.ywq.uambition.view.holocolorpicker.OpacityBar
+            android:id="@+id/opacitybar"
+            android:layout_width="match_parent"
+            android:visibility="gone"
+            android:layout_height="wrap_content" />
+        <uambition.ares.ywq.uambition.view.holocolorpicker.SaturationBar
+            android:layout_width="match_parent"
+            android:id="@+id/saturationBar"
+            android:layout_height="wrap_content" />
+        <uambition.ares.ywq.uambition.view.holocolorpicker.ValueBar
+            android:id="@+id/valuebar"
+
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+    </LinearLayout>
+
+
+
+
+</RelativeLayout>

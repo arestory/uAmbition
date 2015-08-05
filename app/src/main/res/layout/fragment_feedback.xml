@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+
+    android:orientation="vertical"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent" android:layout_height="match_parent">
+
+    <EditText
+        android:id="@+id/feedback_content"
+        android:layout_width="match_parent"
+        android:hint="您的宝贵建议是开发者的源动力"
+        android:gravity="left"
+        android:textColor="@color/black"
+        android:paddingLeft="5dp"
+        android:layout_height="180dp" />
+    <Button
+        android:id="@+id/commit"
+        android:layout_margin="5dp"
+        android:text="@string/commit"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+</LinearLayout>

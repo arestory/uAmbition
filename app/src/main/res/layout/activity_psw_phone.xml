@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    android:id="@+id/layout"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent" android:layout_height="match_parent">
+<include
+    layout="@layout/titlebar"
+    >
+</include>
+
+    <RelativeLayout
+        android:id="@+id/user_phone_layout"
+        android:layout_width="match_parent"
+        android:layout_below="@+id/title_bar"
+        android:layout_height="wrap_content">
+
+        <EditText
+            android:id="@+id/user_phone"
+            android:hint="@string/phone_hint"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:numeric="integer"
+            android:textColor="@color/black"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+         <Button
+             android:id="@+id/get_code"
+             android:background="@null"
+             android:text="@string/get_code"
+             android:layout_width="wrap_content"
+             android:textColor="@color/theme_color"
+             android:layout_height="wrap_content"
+             android:layout_alignParentTop="true"
+             android:layout_alignEnd="@+id/user_phone" />
+
+    </RelativeLayout>
+   <EditText
+        android:id="@+id/code"
+        android:layout_below="@+id/user_phone_layout"
+        android:hint="@string/code_hint"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:textColor="@color/black"
+       android:numeric="integer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <EditText
+        android:id="@+id/newPSW"
+        android:layout_below="@+id/code"
+        android:hint="输入新密码"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:textColor="@color/black"
+        android:password="true"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+    <Button
+    android:id="@+id/next"
+    android:text="@string/next"
+    android:layout_marginLeft="10dp"
+    android:layout_marginRight="10dp"
+    android:background="@color/theme_color"
+    android:layout_below="@+id/newPSW"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content" />
+</RelativeLayout>

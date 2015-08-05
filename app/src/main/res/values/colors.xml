@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+<color name="theme_color">#EF6C00</color>
+<color name="menu_item_color">#ffed8600</color>
+<color name="child_theme_color">#1C79FE</color>
+
+<color name="white">#FFFFFF</color>
+    <color name="black">#000000</color>
+    <color name="card_background">#ffffff</color>
+    <color name="card_shadow">#10000000</color>
+</resources>

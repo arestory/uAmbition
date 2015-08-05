@@ -1,0 +1,213 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <RelativeLayout
+        android:id="@+id/top_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+<include
+    layout="@layout/titlebar"
+    >
+
+</include>
+
+    </RelativeLayout>
+        <ScrollView
+    android:layout_below="@+id/top_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+            android:scrollbars="none"
+            android:layout_marginBottom="50dp"
+    android:id="@+id/scrollView">
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <EditText
+            android:hint="你的新目标是什么？"
+            android:id="@+id/ambition"
+            android:background="@color/theme_color"
+            android:gravity="left"
+            android:paddingLeft="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="180dp" />
+
+<LinearLayout
+    android:id="@+id/adv_layout"
+    android:orientation="vertical"
+    android:layout_below="@+id/ambition"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+     <LinearLayout
+        android:orientation="horizontal"
+        android:id="@+id/author_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="right"
+        android:paddingBottom="10dp"
+        android:layout_centerVertical="true" >
+
+        <uambition.ares.ywq.uambition.view.CircularImageView
+
+            android:layout_width="30dp"
+            android:id="@+id/author_img"
+            android:background="@drawable/avatar"
+            android:layout_height="30dp" />
+        <TextView
+            android:id="@+id/author_name"
+            android:text="YWQ"
+            android:layout_gravity="center_vertical"
+            android:textColor="@color/white"
+            android:layout_marginRight="5dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
+    <LinearLayout
+        android:background="@color/black"
+        android:orientation="horizontal"
+        android:id="@+id/miniAdLinearLayout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"/>
+
+</LinearLayout>
+
+
+
+        <LinearLayout
+            android:id="@+id/begin_date"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:layout_below="@+id/adv_layout"
+            android:background="@drawable/selector"
+            android:onClick="showBeginDatePicker"
+
+            android:layout_alignParentStart="true">
+            <ImageView
+                android:layout_margin="5dp"
+                android:background="@drawable/clock_begin"
+                android:layout_width="35dp"
+                android:layout_height="35dp" />
+            <TextView
+                android:id="@+id/begin_date_text"
+                android:text="开始时间"
+                android:textColor="@color/black"
+                android:layout_marginLeft="15dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:id="@+id/end_date"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:background="@drawable/selector"
+            android:onClick="showEndDatePicker"
+            android:layout_below="@+id/begin_date"
+            android:layout_alignParentStart="true">
+            <ImageView
+                android:layout_margin="5dp"
+                android:background="@drawable/clock_end"
+                android:layout_width="35dp"
+                android:layout_height="35dp" />
+            <TextView
+                android:id="@+id/end_date_text"
+                android:text="结束时间"
+                android:layout_marginLeft="15dp"
+                android:textColor="@color/black"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+        </LinearLayout>
+          <CheckBox
+            android:id="@+id/isPrivate"
+            android:layout_margin="5dp"
+            android:layout_below="@+id/end_date"
+            android:text="是否公开到社区"
+            android:paddingLeft="10dp"
+            android:textSize="16sp"
+            android:textColor="@color/black"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:checked="false" />
+        <ListView
+            android:id="@+id/comment_listview"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/isPrivate"
+            android:layout_marginLeft="10dp"
+            android:divider="@color/theme_color"
+            android:dividerHeight="0.5dp"
+            android:scrollbars="none" />
+
+        <LinearLayout
+            android:id="@+id/progress_layout"
+            android:layout_below="@+id/isPrivate"
+            android:layout_centerVertical="true"
+            android:layout_centerHorizontal="true"
+            android:orientation="horizontal"
+            android:gravity="center"
+            android:onClick="getCommentData"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <ProgressBar
+                android:id="@+id/loadBar"
+                style="?android:progressBarStyleSmall"
+                android:layout_width="30dp"
+                android:layout_height="30dp"/>
+
+            <TextView
+                android:id="@+id/get"
+                android:gravity="center"
+                android:text="正在获取评论列表"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+        </LinearLayout>
+
+
+    </RelativeLayout>
+
+
+
+</ScrollView>
+
+    <LinearLayout
+        android:id="@+id/comment_layout"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_alignParentBottom="true"
+        android:layout_marginTop="5dp"
+        android:background="#ffffff"
+        android:gravity="center_vertical"
+        android:orientation="horizontal" >
+
+        <EditText
+            android:id="@+id/edit_comment"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1.07"
+            android:background="@null"
+            android:paddingLeft="10dp"
+            android:textColor="@color/black"
+            android:hint="发表评论" />
+
+        <Button
+            android:id="@+id/send_comment"
+            android:layout_width="68dp"
+            android:layout_height="45dp"
+            android:background="@color/theme_color"
+            android:text="发表"
+            android:layout_marginRight="1dp"
+            android:textColor="#ffffff" />
+
+    </LinearLayout>
+
+
+</RelativeLayout>

@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:gravity="center"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+<LinearLayout
+    android:id="@+id/menu_title_view"
+    android:orientation="vertical"
+    android:gravity="center"
+    android:background="@color/theme_color"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+     <uambition.ares.ywq.uambition.view.CircularImageView
+         android:layout_gravity="center"
+         android:id="@+id/avatar"
+         android:background="@drawable/avatar"
+         android:layout_width="150dp"
+         android:layout_height="150dp" />
+    <TextView
+        android:id="@+id/user_name"
+        android:text="YWQ"
+        android:gravity="center"
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="5dp"
+        android:textColor="#000000"
+        android:textSize="20sp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+</LinearLayout>
+        <ListView
+            android:id="@+id/menu_list"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:choiceMode="singleChoice"
+            />
+
+</LinearLayout>

@@ -1,0 +1,34 @@
+apply plugin: 'com.android.application'
+
+android {
+    compileSdkVersion 22
+    buildToolsVersion "23.0.0 rc2"
+
+    defaultConfig {
+        applicationId "uambition.ares.ywq.uambition"
+        minSdkVersion 19
+        targetSdkVersion 22
+        versionCode 1
+        versionName "1.0"
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+}
+
+dependencies {
+    compile files('libs/Bmob_Push_V0.6beta_20150408.jar')
+    compile files('libs/BmobSDK_V3.4.1_0710.jar')
+    compile 'com.google.android.gms:play-services:7.5.0'
+    compile 'com.android.support:appcompat-v7:22.2.0'
+    compile 'com.astuetz:pagerslidingtabstrip:1.0.1'
+    compile 'com.getbase:floatingactionbutton:1.10.0'
+    compile 'com.android.support:design:22.2.0'
+    compile files('libs/systembartint-1.0.4.jar')
+    compile files('libs/universal-image-loader-1.9.1.jar')
+    compile files('libs/AppOffer_2.4.2.jar')
+
+}

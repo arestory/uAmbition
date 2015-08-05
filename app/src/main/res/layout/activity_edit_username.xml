@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent" android:layout_height="match_parent">
+<include
+    layout="@layout/titlebar"
+    >
+</include>
+
+    <RelativeLayout
+        android:id="@+id/user_name_layout"
+        android:layout_width="match_parent"
+        android:layout_below="@+id/title_bar"
+        android:layout_height="wrap_content">
+
+        <EditText
+            android:id="@+id/user_name"
+            android:hint="@string/new_user_name"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:textColor="@color/black"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+
+    </RelativeLayout>
+
+<Button
+    android:id="@+id/confirm"
+    android:text="@string/confirm"
+    android:layout_marginLeft="10dp"
+    android:layout_marginRight="10dp"
+    android:background="@color/theme_color"
+    android:layout_below="@+id/user_name_layout"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content" />
+</RelativeLayout>

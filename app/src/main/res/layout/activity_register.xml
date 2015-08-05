@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent" android:layout_height="match_parent">
+<include
+    layout="@layout/titlebar"
+    >
+</include>
+    <EditText
+        android:id="@+id/user_name"
+        android:layout_below="@+id/title_bar"
+        android:hint="@string/name_hint"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:textColor="@color/black"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+<EditText
+    android:id="@+id/user_email"
+    android:layout_below="@+id/user_name"
+    android:hint="@string/email_hint"
+    android:layout_marginLeft="10dp"
+    android:layout_marginRight="10dp"
+    android:textColor="@color/black"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content" />
+<EditText
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:id="@+id/password"
+    android:hint="@string/password_hint"
+    android:password="true"
+    android:textColor="@color/black"
+    android:layout_marginLeft="10dp"
+    android:layout_marginRight="10dp"
+    android:layout_below="@+id/user_email"
+    />
+<Button
+    android:id="@+id/register"
+    android:text="@string/register"
+    android:layout_marginLeft="10dp"
+    android:layout_marginRight="10dp"
+    android:background="@color/theme_color"
+    android:layout_below="@+id/password"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content" />
+</RelativeLayout>
