@@ -32,8 +32,10 @@ import java.util.List;
 import cn.bmob.push.BmobPush;
 import cn.bmob.v3.BmobInstallation;
 import cn.bmob.v3.BmobPushManager;
+import cn.bmob.v3.BmobQuery;
 import cn.bmob.v3.BmobUser;
 import cn.bmob.v3.listener.BmobUpdateListener;
+import cn.bmob.v3.listener.FindListener;
 import cn.bmob.v3.listener.SaveListener;
 import cn.bmob.v3.listener.UpdateListener;
 import cn.bmob.v3.update.BmobUpdateAgent;
@@ -122,30 +124,52 @@ public FragmentManager getManager(){
         //initDatePicker();
         // datePickerDialog.show(getFragmentManager(),"");
         //BmobUpdateAgent.update(this);
-        BmobPush.startWork(this, getResources().getString(R.string.bmob_sdk_key));
 
         // 创建推送消息的对象
         bmobPushManager = new BmobPushManager(this);
 
         //开启推送
-        MyInstall is = new MyInstall(this);
+       // MyInstall is = new MyInstall(this);
+        BmobInstallation.getCurrentInstallation(this).save();
 
-        is.subscribe(this.user.getObjectId());
-        //is.setReceiverId(this.user.getObjectId());
-        //is.setInstallationId(this.user.getObjectId());
-        //is.setDeviceToken(ththisis.user.getObjectId());
-        is.save(this, new SaveListener() {
+        //更新推送设备信息
+        BmobQuery<MyInstall> query = new BmobQuery<MyInstall>();
+        query.addWhereEqualTo("installationId", BmobInstallation.getInstallationId(this));
+        query.findObjects(this, new FindListener<MyInstall>() {
+
             @Override
-            public void onSuccess() {
+            public void onSuccess(List<MyInstall> object) {
+                // TODO Auto-generated method stub
+                if (object.size() > 0) {
+                    MyInstall mbi = object.get(0);
+                    mbi.setReceiverId(MainActivity.this.user.getObjectId());
+                    mbi.update(MainActivity.this, new UpdateListener() {
 
+                        @Override
+                        public void onSuccess() {
+                            // TODO Auto-generated method stub
+
+                        }
+
+                        @Override
+                        public void onFailure(int code, String msg) {
+                            // TODO Auto-generated method stub
+
+
+                          }
+                    });
+                } else {
+                }
             }
 
             @Override
-            public void onFailure(int i, String s) {
-
+            public void onError(int code, String msg) {
+                // TODO Auto-generated method stub
             }
         });
 
+
+        BmobPush.startWork(this, getResources().getString(R.string.bmob_sdk_key));
 
 
 //        BmobInstallation installation =
@@ -450,10 +474,8 @@ public FragmentManager getManager(){
             public boolean onMenuItemClick(MenuItem item) {
                 switch (item.getItemId()) {
                     case R.id.action_settings:
-                        Toast.makeText(MainActivity.this, "action_settings", 0).show();
                         break;
                     case R.id.action_share:
-                        Toast.makeText(MainActivity.this, "action_share", 0).show();
                         break;
                     default:
                         break;

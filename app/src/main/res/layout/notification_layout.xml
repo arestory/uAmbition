@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent" android:layout_height="match_parent">
+
+    <uambition.ares.ywq.uambition.view.CircularImageView
+        android:layout_width="50dp"
+        android:background="@drawable/ambition_icon90"
+        android:layout_margin="10dp"
+        android:layout_height="50dp"
+        android:id="@+id/view" />
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/linearLayout4">
+
+    </LinearLayout>
+    <TextView
+        android:id="@+id/app_name"
+        android:text="@string/app_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/view"
+        android:layout_toEndOf="@+id/view"
+        android:layout_marginStart="172dp" />
+
+    <TextView
+        android:id="@+id/notify_detail"
+        android:text="这是内容"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/view"
+        android:layout_toEndOf="@+id/view" />
+
+    <TextView
+        android:id="@+id/notify_title"
+        android:text="这是标题"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/view"
+        android:layout_alignStart="@+id/notify_detail" />
+</RelativeLayout>

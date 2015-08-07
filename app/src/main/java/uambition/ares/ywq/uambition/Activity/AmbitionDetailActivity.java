@@ -4,6 +4,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
@@ -51,15 +52,15 @@ import uambition.ares.ywq.uambition.adapter.CommentAdapter;
 import uambition.ares.ywq.uambition.bean.Ambition;
 import uambition.ares.ywq.uambition.bean.AmbitionDate;
 import uambition.ares.ywq.uambition.bean.Comment;
-import uambition.ares.ywq.uambition.bean.MyInstall;
 import uambition.ares.ywq.uambition.bean.User;
 import uambition.ares.ywq.uambition.view.CircularImageView;
 import uambition.ares.ywq.uambition.view.datepicker.date.DatePickerDialog;
 
 /**
- * Created by ares on 15/7/27.
+ * Created by ares on 15/8/6.
  */
-public class AmbitionActivity extends  BaseActivity {
+public class AmbitionDetailActivity extends  BaseActivity{
+
 
     private DatePickerDialog datePickerBegin;
     private DatePickerDialog datePickerEnd;
@@ -88,12 +89,10 @@ public class AmbitionActivity extends  BaseActivity {
     private CircularImageView authorImg;
     private TextView authorName;
     private LinearLayout authorLayout;
-   private LinearLayout miniLayout;
+    private LinearLayout miniLayout;
     private LinearLayout progress_layout;
     private TextView getAgain;
     private String openOrCloseADV;
-    private int comment_Length;//评论内容长度
-    private String commentHeadString;//评论内容的头内容
     private void initDatePicker() {
 
 
@@ -108,7 +107,7 @@ public class AmbitionActivity extends  BaseActivity {
                         //证明曾选择结束日期
                         if(endDate!=null){
                             if(!AmbitionDate.compareIsRightDates(beginDate, endDate)){
-                                ToastUtil.showMessage(AmbitionActivity.this, "亲,开始日期不能比结束时间晚哦");
+                                ToastUtil.showMessage(AmbitionDetailActivity.this, "亲,开始日期不能比结束时间晚哦");
                                 return;
                             }
                             datePickerBegin.dismiss();
@@ -141,7 +140,7 @@ public class AmbitionActivity extends  BaseActivity {
                         //证明曾选择结束日期
 
                         if(!AmbitionDate.compareIsRightDates(beginDate, endDate)){
-                            ToastUtil.showMessage(AmbitionActivity.this,"亲,结束日期不能比开始日期早哦");
+                            ToastUtil.showMessage(AmbitionDetailActivity.this,"亲,结束日期不能比开始日期早哦");
                             return;
 
                         }else{
@@ -167,18 +166,17 @@ public class AmbitionActivity extends  BaseActivity {
     @Override
     public void setContentView() {
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
-       setContentView(R.layout.activity_ambition_detail);
-        Intent intent=getIntent();
-        if(intent!=null){
+        setContentView(R.layout.activity_ambition_detail);
+        Intent intent = getIntent();
+        Bundle bundle=intent.getExtras();
+        currentAmbition =(Ambition)bundle.getSerializable("ambition");
 
-            currentAmbition = (Ambition)getIntent().getSerializableExtra("ambition");
-            MODE=intent.getIntExtra("MODE",0);
+        //currentAmbition = (Ambition)intent.getSerializableExtra("ambition");
+        String id = intent.getStringExtra("ambitionID");
+        if(currentAmbition!=null){
+            ToastUtil.showMessage(this, currentAmbition.getTitle()+";"+currentAmbition.getObjectId()+"" );
 
-        }else{
         }
-
-
-
     }
 
     @Override
@@ -199,7 +197,6 @@ public class AmbitionActivity extends  BaseActivity {
         //评论
         commentEditText=(EditText)findViewById(R.id.edit_comment);
 
-        commentEditText.setHint("说点什么吧~~");
         commentEditText.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -214,29 +211,11 @@ public class AmbitionActivity extends  BaseActivity {
                     sendBtn.setClickable(true);
                     sendBtn.setEnabled(true);
 
-                     if(commentHeadString!=null){
-                         //此操作可将@的人去掉
-                         if(s.length()==commentHeadString.length()-1){
-
-                            if(s.toString().contains(commentHeadString.replace(" ",""))){
-
-                                commentEditText.setText("");
-                                toCommenter=null;
-                            }
-                        }
-                    }
-
-
 
                 }else{
-                    if(isUserSAmbition()){
-                        sendBtn.setText("签到");
-                    }else{
-                        sendBtn.setText("评论");
-                    }
-
+                    sendBtn.setText("发表");
                     //重置
-                     toCommenter=null;
+                    // toCommenter=null;
 
                 }
             }
@@ -258,19 +237,11 @@ public class AmbitionActivity extends  BaseActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Comment comment = (Comment)adapter.getItem(position);
-
-                if(!comment.getCommenter().getObjectId().equals(commenter.getObjectId())){
-                    toCommenter=comment.getCommenter();
-                    commentHeadString="回复:"+"@"+toCommenter.getNickName()+" ";
-                    commentEditText.setText(commentHeadString);
-                    comment_Length=commentHeadString.length();
-                    sendBtn.setText("回复");
-                    commentEditText.requestFocus();
-                    showInput();
-                }else{
-                    toCommenter=null;
-                }
-
+                toCommenter=comment.getCommenter();
+                commentEditText.setText("回复:"+"@"+toCommenter.getNickName()+" ");
+                sendBtn.setText("回复");
+                commentEditText.requestFocus();
+                showInput();
 
             }
         });
@@ -296,11 +267,11 @@ public class AmbitionActivity extends  BaseActivity {
             @Override
             public void onSuccess(List<Comment> list) {
                 comments.addAll(list);
-                adapter=new CommentAdapter(AmbitionActivity.this,comments);
+                adapter=new CommentAdapter(AmbitionDetailActivity.this,comments);
                 comment_listview.setAdapter(adapter);
                 progress_layout.setVisibility(View.GONE);
                 changeListViewHeight();
-                 }
+            }
 
             @Override
             public void onError(int i, String s) {
@@ -313,21 +284,17 @@ public class AmbitionActivity extends  BaseActivity {
             @Override
             public void onClick(View v) {
 
-                if(false){
-                     ToastUtil.showMessage(AmbitionActivity.this,"@了"+toCommenter.getNickName());
-
-                }
 
                 String content=commentEditText.getText().toString();
                 if(TextUtils.isEmpty(content)){
-                    ToastUtil.showMessage(AmbitionActivity.this,"评论不能为空");
+                    ToastUtil.showMessage(AmbitionDetailActivity.this,"评论不能为空");
                     return;
                 }
                 final Comment comment = new Comment();
                 comment.setAmbition(currentAmbition);
 
                 comment.setContent(content);
-                comment.setCommenter(BmobUser.getCurrentUser(AmbitionActivity.this, User.class));
+                comment.setCommenter(BmobUser.getCurrentUser(AmbitionDetailActivity.this, User.class));
 
                 hindInput();
 
@@ -336,40 +303,36 @@ public class AmbitionActivity extends  BaseActivity {
                 adapter.notifyDataSetChanged();
                 changeListViewHeight();
                 commentEditText.setText("");
-                if(isUserSAmbition()){
-                    sendBtn.setText("签到");
-                }else{
-                    sendBtn.setText("评论");
-                }
+                sendBtn.setText("发表");
 
 
-               final BmobPushManager  bmobPushManager = new BmobPushManager(AmbitionActivity.this);
+                final BmobPushManager bmobPushManager = new BmobPushManager(AmbitionDetailActivity.this);
                 //先保存评论数据再进行关联
-                comment.save(AmbitionActivity.this, new SaveListener() {
+                comment.save(AmbitionDetailActivity.this, new SaveListener() {
                     @Override
                     public void onSuccess() {
-                        //ToastUtil.showMessage(AmbitionActivity.this, "提交成功");
+                        //ToastUtil.showMessage(AmbitionDetailActivity.this, "提交成功");
                         BmobRelation relation = new BmobRelation();
 
                         relation.add(comment);
                         currentAmbition.setCommentList(relation);
-                        currentAmbition.update(AmbitionActivity.this, new UpdateListener() {
+                        currentAmbition.update(AmbitionDetailActivity.this, new UpdateListener() {
                             @Override
                             public void onSuccess() {
-                                ToastUtil.showMessage(AmbitionActivity.this, "评论成功");
+                                ToastUtil.showMessage(AmbitionDetailActivity.this, "评论成功");
                                 BmobQuery<BmobInstallation> query = BmobInstallation.getQuery();
 
                                 String commentContent="";
                                 String type="";
                                 if(toCommenter!=null){
                                     query.addWhereEqualTo("receiverId", toCommenter.getObjectId());
-                                    type="@了";
+                                    commentContent="有人在评论中@了你："+comment.getContent();
+                                    type="";
 
                                 }else{
                                     query.addWhereEqualTo("receiverId", author.getObjectId());
-                                    type="回复了";
-                                    }
-
+                                    commentContent="有人评论了你的目标："+comment.getContent();
+                                }
 
                                 JSONObject pushObject= new JSONObject();
                                 try {
@@ -388,31 +351,25 @@ public class AmbitionActivity extends  BaseActivity {
                                     e.printStackTrace();
                                 }
                                 bmobPushManager.setQuery(query);
+
                                 //如果是自己的目标，评论则不推送
                                 if(!commenter.getObjectId().equals(author.getObjectId())){
-
                                     bmobPushManager.pushMessage(pushObject, new PushListener() {
-                                    @Override
-                                    public void onSuccess() {
+                                        @Override
+                                        public void onSuccess() {
+                                        }
 
-                                        adapter.notifyDataSetChanged();
-                                        comment_listview.setSelection(0);
-                                         }
+                                        @Override
+                                        public void onFailure(int i, String s) {
 
-                                    @Override
-                                    public void onFailure(int i, String s) {
-
-                                        ToastUtil.showMessage(AmbitionActivity.this,"推送失败"+s);
-                                    }
-                                });}
-                                toCommenter=null;
-                                commentEditText.setText("");
-                                if(isUserSAmbition()){
-                                    sendBtn.setText("签到");
-                                }else{
-                                    sendBtn.setText("评论");
+                                            ToastUtil.showMessage(AmbitionDetailActivity.this,"推送失败"+s);
+                                        }
+                                    });
                                 }
 
+
+                                commentEditText.setText("");
+                                sendBtn.setText("发表");
                             }
 
                             @Override
@@ -420,7 +377,7 @@ public class AmbitionActivity extends  BaseActivity {
                                 comments.remove(0);
                                 adapter.notifyDataSetChanged();
                                 changeListViewHeight();
-                                ToastUtil.showMessage(AmbitionActivity.this, "提交失败" + s);
+                                ToastUtil.showMessage(AmbitionDetailActivity.this, "提交失败" + s);
 
                             }
                         });
@@ -428,7 +385,7 @@ public class AmbitionActivity extends  BaseActivity {
 
                     @Override
                     public void onFailure(int i, String s) {
-                        ToastUtil.showMessage(AmbitionActivity.this, "提交失败" + s);
+                        ToastUtil.showMessage(AmbitionDetailActivity.this, "提交失败" + s);
                     }
                 });
 
@@ -481,7 +438,7 @@ public class AmbitionActivity extends  BaseActivity {
             public void onSuccess(List<Comment> list) {
                 progress_layout.setVisibility(View.GONE);
                 comments.addAll(list);
-                adapter=new CommentAdapter(AmbitionActivity.this,comments);
+                adapter=new CommentAdapter(AmbitionDetailActivity.this,comments);
                 comment_listview.setAdapter(adapter);
 //                progress_layout.setVisibility(View.GONE);
                 changeListViewHeight();
@@ -539,7 +496,7 @@ public class AmbitionActivity extends  BaseActivity {
         AppConnect.getInstance(this).setAdBackColor(getThemeColor());
         //设置迷你广告广告语颜色 AppConnect.getInstance(this).setAdForeColor(Color.YELLOW); //若未设置以上两个颜色,则默认为黑底白字
         miniLayout =(LinearLayout)findViewById(R.id.miniAdLinearLayout);
-         openOrCloseADV=AppConnect.getInstance(this).getConfig("openADV", "open");
+        openOrCloseADV=AppConnect.getInstance(this).getConfig("openADV", "open");
         String spOpenOrClose = ThemeColorUtil.getData(this, "ambition", "isOpenADV");
 
 
@@ -608,12 +565,6 @@ public class AmbitionActivity extends  BaseActivity {
             });
             authorName.setText(author.getNickName());
 
-            if(isUserSAmbition()){
-                sendBtn.setText("签到");
-            }else{
-
-                sendBtn.setText("评论");
-            }
         }
 
 
@@ -630,7 +581,7 @@ public class AmbitionActivity extends  BaseActivity {
         boolean isRightBtnVisible=true;
         String title ="";
         if (MODE==0){
-             isRightBtnVisible=true;
+            isRightBtnVisible=true;
             title="修改";
         }else if (MODE==1){
             isRightBtnVisible=false;
@@ -638,7 +589,7 @@ public class AmbitionActivity extends  BaseActivity {
 
         }
         initDatePicker();
-        final ProgressDialog dialog=new ProgressDialog(AmbitionActivity.this);
+        final ProgressDialog dialog=new ProgressDialog(AmbitionDetailActivity.this);
         dialog.setMessage("正在提交...");
 
         TitleBarUtil.initTitleBarWithRightBtn(this, isRightBtnVisible, title, new TitleBarUtil.TitleBarCallBack() {
@@ -662,30 +613,30 @@ public class AmbitionActivity extends  BaseActivity {
 
                     currentAmbition.setAuthor(author);
 
-                    currentAmbition.update(AmbitionActivity.this, currentAmbition.getObjectId(), new UpdateListener() {
+                    currentAmbition.update(AmbitionDetailActivity.this, currentAmbition.getObjectId(), new UpdateListener() {
                         @Override
                         public void onSuccess() {
                             dialog.dismiss();
-                            Intent intent1 = new Intent(AmbitionActivity.this, MainActivity.class);
+                            Intent intent1 = new Intent(AmbitionDetailActivity.this, MainActivity.class);
                             intent1.putExtra("ambition", currentAmbition);
                             if(getIntent()!=null){
-                               int position= getIntent() .getIntExtra("position", 0);
+                                int position= getIntent() .getIntExtra("position", 0);
                                 intent1.putExtra("position", position);
                             }
                             setResult(MainFragment.EDIT_AMBITION, intent1);
-                            ToastUtil.showMessage(AmbitionActivity.this, "修改成功");
+                            ToastUtil.showMessage(AmbitionDetailActivity.this, "修改成功");
                             finish();
                         }
 
                         @Override
                         public void onFailure(int i, String s) {
                             dialog.dismiss();
-                            ToastUtil.showMessage(AmbitionActivity.this, "修改失败，请检查网络" + s + ":" + i);
+                            ToastUtil.showMessage(AmbitionDetailActivity.this, "修改失败，请检查网络" + s + ":" + i);
 
                         }
                     });
                 }else{
-                    ToastUtil.showMessage(AmbitionActivity.this,"请填写结束日期");
+                    ToastUtil.showMessage(AmbitionDetailActivity.this,"请填写结束日期");
                 }
 
             }
@@ -698,23 +649,6 @@ public class AmbitionActivity extends  BaseActivity {
 
     }
 
-    //判断是自己的目标还是别人的目标，显示是签到还是回复
-    public boolean isUserSAmbition(){
-        boolean flag=false;
-        //如果是
-        if(commenter!=null&&author!=null){
-            if(commenter.getObjectId().equals(author.getObjectId())){
-                flag=true;
-            }else{
-
-
-                flag=false;
-            }
-        }
-
-        return  flag;
-    }
-
     public void showEndDatePicker(View v){
         if(MODE==0){
             datePickerEnd.show(getFragmentManager(), "");
@@ -725,7 +659,7 @@ public class AmbitionActivity extends  BaseActivity {
 
     public void showBeginDatePicker(View v){
         if(MODE==0){
-        datePickerBegin.show(getFragmentManager(),"");}
+            datePickerBegin.show(getFragmentManager(),"");}
 
     }
 

@@ -20,6 +20,7 @@ import uambition.ares.ywq.uambition.R;
 import uambition.ares.ywq.uambition.Util.TitleBarUtil;
 import uambition.ares.ywq.uambition.Util.ToastUtil;
 import uambition.ares.ywq.uambition.Util.Util;
+import uambition.ares.ywq.uambition.bean.Ambition;
 
 /**
  * Created by ares on 15/7/25.
@@ -41,7 +42,8 @@ public class PhoneActivity extends BaseActivity {
         TitleBarUtil.initTitleBar(this, "输入手机号码", new TitleBarUtil.TitleBarCallBack() {
             @Override
             public void leftBtnClickLister() {
-                finish();;
+                finish();
+                ;
             }
 
             @Override
@@ -49,7 +51,15 @@ public class PhoneActivity extends BaseActivity {
 
             }
         });
-    }
+
+//        Intent intent = getIntent();
+//        Ambition ambition = (Ambition)intent.getSerializableExtra("ambition");
+//        if(ambition!=null){
+//            ToastUtil.showMessage(this,"ambition==null"+ambition.getTitle()+(ambition.getBeginTime()));
+//
+//            return;
+//        }
+         }
 
 
 

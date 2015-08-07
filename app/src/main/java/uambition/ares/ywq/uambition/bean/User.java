@@ -1,5 +1,7 @@
 package uambition.ares.ywq.uambition.bean;
 
+import java.io.Serializable;
+
 import cn.bmob.v3.BmobInstallation;
 import cn.bmob.v3.BmobUser;
 
