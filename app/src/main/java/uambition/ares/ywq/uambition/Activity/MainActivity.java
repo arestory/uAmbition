@@ -491,6 +491,7 @@ public FragmentManager getManager(){
        // mDrawerLayout.setScrimColor(getResources().getColor(R.color.white));
         mDrawerToggle.syncState();
         mDrawerLayout.setDrawerListener(mDrawerToggle);
+        //
     }
 
 
