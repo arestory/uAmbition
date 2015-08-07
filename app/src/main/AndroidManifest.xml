@@ -64,6 +64,10 @@
             android:screenOrientation="portrait" >
         </activity>
         <activity
+            android:name=".Activity.AmbitionDetailActivity"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
             android:name=".Activity.PhoneActivity"
             android:screenOrientation="portrait" >
         </activity>
@@ -79,11 +83,12 @@
             android:name=".Activity.UserDetailActivity"
             android:screenOrientation="portrait"  >
         </activity>
+
+        <!--android:windowSoftInputMode="adjustPan|stateHidden"-->
+        <!--android:configChanges="orientation|keyboardHidden"-->
         <activity
             android:name=".Activity.AmbitionActivity"
-            android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustPan|stateHidden"
-            android:configChanges="orientation|keyboardHidden"  >
+            android:screenOrientation="portrait" >
         </activity>
         <activity
             android:name=".Activity.LoginActivity"
