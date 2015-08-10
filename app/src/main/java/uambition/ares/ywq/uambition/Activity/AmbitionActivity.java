@@ -174,6 +174,7 @@ public class AmbitionActivity extends  BaseActivity {
             currentAmbition = (Ambition)getIntent().getSerializableExtra("ambition");
             MODE=intent.getIntExtra("MODE",0);
 
+           // ToastUtil.showMessage(AmbitionActivity.this,currentAmbition.getTitle());
         }else{
         }
 
@@ -209,34 +210,33 @@ public class AmbitionActivity extends  BaseActivity {
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
 
-                if(s.length()>0){
+                if (s.length() > 0) {
 
                     sendBtn.setClickable(true);
                     sendBtn.setEnabled(true);
 
-                     if(commentHeadString!=null){
-                         //此操作可将@的人去掉
-                         if(s.length()==commentHeadString.length()-1){
+                    if (commentHeadString != null) {
+                        //此操作可将@的人去掉
+                        if (s.length() == commentHeadString.length() - 1) {
 
-                            if(s.toString().contains(commentHeadString.replace(" ",""))){
+                            if (s.toString().contains(commentHeadString.replace(" ", ""))) {
 
                                 commentEditText.setText("");
-                                toCommenter=null;
+                                toCommenter = null;
                             }
                         }
                     }
 
 
-
-                }else{
-                    if(isUserSAmbition()){
+                } else {
+                    if (isUserSAmbition()) {
                         sendBtn.setText("签到");
-                    }else{
+                    } else {
                         sendBtn.setText("评论");
                     }
 
                     //重置
-                     toCommenter=null;
+                    toCommenter = null;
 
                 }
             }
@@ -275,14 +275,36 @@ public class AmbitionActivity extends  BaseActivity {
             }
         });
 
+        initAVD();
+        //根据模式隐藏或显示相应控件
+        switch (MODE){
 
+            case 0:
+                authorLayout.setVisibility(View.GONE);
+                comment_listview.setVisibility(View.GONE);
+                sendBtn.setVisibility(View.GONE);
+                commentEditText.setVisibility(View.GONE);
+                miniLayout.setVisibility(View.GONE);
+                progress_layout.setVisibility(View.GONE);
+                break;
+            //查看模式
+            case 1:
+                ambitionText.setEnabled(false);
+                ambitionText.setGravity(Gravity.CENTER);
+                privateCheckBox.setEnabled(false);
+                authorLayout.setVisibility(View.VISIBLE);
+
+                comment_listview.setVisibility(View.VISIBLE);
+                sendBtn.setVisibility(View.VISIBLE);
+                commentEditText.setVisibility(View.VISIBLE);
+                break;
+        }
 
 
         SimpleDateFormat simpleDateFormat=new SimpleDateFormat("yyyy年MM月dd日");
         Date curDate    =   new Date(System.currentTimeMillis());//获取当前时间
         String    str    =    simpleDateFormat.format(curDate);
 
-        initAVD();
 
 
         final BmobQuery<Comment> query = new BmobQuery<Comment>();
@@ -363,11 +385,11 @@ public class AmbitionActivity extends  BaseActivity {
                                 String type="";
                                 if(toCommenter!=null){
                                     query.addWhereEqualTo("receiverId", toCommenter.getObjectId());
-                                    type="@了";
+                                    type="talkAbout";
 
                                 }else{
                                     query.addWhereEqualTo("receiverId", author.getObjectId());
-                                    type="回复了";
+                                    type="comment";
                                     }
 
 
@@ -379,10 +401,14 @@ public class AmbitionActivity extends  BaseActivity {
                                     pushObject.put("ambition", currentAmbition.getTitle());
                                     //评论的目标id
                                     pushObject.put("ambitionID", currentAmbition.getObjectId());
+
+
+                                    ThemeColorUtil.saveColor(AmbitionActivity.this, "ambition", "ambitionID", currentAmbition.getObjectId());
+
                                     //评论内容
                                     pushObject.put("detail", comment.getContent());
                                     //评论类型 回复还是评论
-                                    pushObject.put("type", comment.getContent());
+                                    pushObject.put("type", type);
 
                                 } catch (JSONException e) {
                                     e.printStackTrace();
@@ -404,7 +430,8 @@ public class AmbitionActivity extends  BaseActivity {
 
                                         ToastUtil.showMessage(AmbitionActivity.this,"推送失败"+s);
                                     }
-                                });}
+                                });
+                                 }
                                 toCommenter=null;
                                 commentEditText.setText("");
                                 if(isUserSAmbition()){
@@ -437,12 +464,7 @@ public class AmbitionActivity extends  BaseActivity {
             }
         });
 
-        if(MODE==1){
-            authorLayout.setVisibility(View.VISIBLE);
-        }else{
-            authorLayout.setVisibility(View.GONE);
 
-        }
         if(currentAmbition!=null){
             beginDate=AmbitionDate.getDateFromStr(currentAmbition.getBeginTime());
             endDate=AmbitionDate.getDateFromStr(currentAmbition.getEndTime());
@@ -450,20 +472,7 @@ public class AmbitionActivity extends  BaseActivity {
         }
 
 
-        switch (MODE){
 
-            case 0:
-
-
-                break;
-            //查看模式
-            case 1:
-                ambitionText.setEnabled(false);
-                ambitionText.setGravity(Gravity.CENTER);
-                privateCheckBox.setEnabled(false);
-
-                break;
-        }
     }
 
     //重新获取评论列表

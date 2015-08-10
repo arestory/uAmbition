@@ -52,13 +52,13 @@ public class PhoneActivity extends BaseActivity {
             }
         });
 
-//        Intent intent = getIntent();
-//        Ambition ambition = (Ambition)intent.getSerializableExtra("ambition");
-//        if(ambition!=null){
-//            ToastUtil.showMessage(this,"ambition==null"+ambition.getTitle()+(ambition.getBeginTime()));
-//
-//            return;
-//        }
+        Intent intent = getIntent();
+        Ambition ambition = (Ambition)intent.getSerializableExtra("ambition");
+        if(ambition!=null){
+            ToastUtil.showMessage(this,"ambition==null"+ambition.getTitle()+(ambition.getBeginTime()));
+
+            return;
+        }
          }
 
 

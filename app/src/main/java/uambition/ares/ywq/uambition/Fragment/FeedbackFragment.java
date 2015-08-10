@@ -13,7 +13,14 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import cn.bmob.v3.BmobInstallation;
+import cn.bmob.v3.BmobPushManager;
+import cn.bmob.v3.BmobQuery;
 import cn.bmob.v3.BmobUser;
+import cn.bmob.v3.listener.PushListener;
 import cn.bmob.v3.listener.SaveListener;
 import uambition.ares.ywq.uambition.Activity.MainActivity;
 import uambition.ares.ywq.uambition.R;
@@ -42,7 +49,7 @@ public class FeedbackFragment extends Fragment {
 
 
     public void initView(View v ){
-        MainActivity activity = (MainActivity)getActivity();
+        final MainActivity activity = (MainActivity)getActivity();
         feedbackET=(EditText)v.findViewById(R.id.feedback_content);
         commitBtn=(Button)v.findViewById(R.id.commit);
         commitBtn.setBackgroundColor(activity.getThemeColor());
@@ -53,7 +60,7 @@ public class FeedbackFragment extends Fragment {
             public void onClick(View v) {
 
 
-                Feedback  feedback=new Feedback();
+                final Feedback  feedback=new Feedback();
                 String content = feedbackET.getText().toString();
                 if(TextUtils.isEmpty(content)){
                     ToastUtil.showMessage(getActivity(),"说点建议嘛");
@@ -68,6 +75,33 @@ public class FeedbackFragment extends Fragment {
                             dialog.dismiss();
 
                             feedbackET.setText("");
+                            JSONObject jsonObject = new JSONObject();
+                            try {
+
+                                jsonObject.put("feedbacker",user.getNickName());
+                                jsonObject.put("feedback",feedback.getContent());
+                                jsonObject.put("type","feedback");
+                                final BmobPushManager bmobPushManager = new BmobPushManager(activity);
+
+                                BmobQuery<BmobInstallation> query = BmobInstallation.getQuery();
+                                query.addWhereEqualTo("receiverId","50b61f1075");
+                                bmobPushManager.setQuery(query);
+
+                                bmobPushManager.pushMessage(jsonObject, new PushListener() {
+                                    @Override
+                                    public void onSuccess() {
+                                    }
+
+                                    @Override
+                                    public void onFailure(int i, String s) {
+
+                                          }
+                                });
+
+
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
                             ToastUtil.showMessage(getActivity(), "提交成功，感谢您的宝贵建议。");
                         }
 

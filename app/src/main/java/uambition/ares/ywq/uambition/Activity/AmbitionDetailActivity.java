@@ -30,6 +30,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+import B.The;
 import cn.bmob.v3.BmobInstallation;
 import cn.bmob.v3.BmobPushManager;
 import cn.bmob.v3.BmobQuery;
@@ -37,6 +38,7 @@ import cn.bmob.v3.BmobUser;
 import cn.bmob.v3.datatype.BmobPointer;
 import cn.bmob.v3.datatype.BmobRelation;
 import cn.bmob.v3.listener.FindListener;
+import cn.bmob.v3.listener.GetListener;
 import cn.bmob.v3.listener.PushListener;
 import cn.bmob.v3.listener.SaveListener;
 import cn.bmob.v3.listener.UpdateListener;
@@ -93,6 +95,8 @@ public class AmbitionDetailActivity extends  BaseActivity{
     private LinearLayout progress_layout;
     private TextView getAgain;
     private String openOrCloseADV;
+    private int comment_Length;//评论内容长度
+    private String commentHeadString;//评论内容的头内容
     private void initDatePicker() {
 
 
@@ -169,15 +173,102 @@ public class AmbitionDetailActivity extends  BaseActivity{
         setContentView(R.layout.activity_ambition_detail);
         Intent intent = getIntent();
         Bundle bundle=intent.getExtras();
-        currentAmbition =(Ambition)bundle.getSerializable("ambition");
+       // currentAmbition =(Ambition)bundle.getSerializable("ambition");
 
         //currentAmbition = (Ambition)intent.getSerializableExtra("ambition");
-        String id = intent.getStringExtra("ambitionID");
+       // String id = intent.getStringExtra("ambitionID");
+        String id =   ThemeColorUtil.getData(this,"ambition","ambitionID");
+        final ProgressDialog dialog = new ProgressDialog(this);
+        dialog.setTitle("正在查询");
+        dialog.show();
+
+
+        BmobQuery<Ambition> query = new BmobQuery<Ambition>();
+        query.include("author");
+        query.getObject(this, id, new GetListener<Ambition>() {
+            @Override
+            public void onSuccess(Ambition ambition) {
+                currentAmbition=ambition;
+                //更新页面
+                refreshData();
+                dialog.dismiss();
+            }
+
+            @Override
+            public void onFailure(int i, String s) {
+
+                dialog.dismiss();
+            }
+        });
+
+
+    }
+
+    public void  refreshData(){
+
+        final BmobQuery<Comment> query = new BmobQuery<Comment>();
+
+
+        query.addWhereEqualTo("ambition", new BmobPointer(currentAmbition));
+        query.include("commenter");
+        //降序排序
+        query.order("-createdAt");
+        query.findObjects(this, new FindListener<Comment>() {
+            @Override
+            public void onSuccess(List<Comment> list) {
+                comments.addAll(list);
+                adapter = new CommentAdapter(AmbitionDetailActivity.this, comments);
+                comment_listview.setAdapter(adapter);
+                progress_layout.setVisibility(View.GONE);
+                //  ToastUtil.showMessage(AmbitionDetailActivity.this,currentAmbition.getTitle());
+                changeListViewHeight();
+            }
+
+            @Override
+            public void onError(int i, String s) {
+                getAgain.setText("获取评论失败，点击重新获取");
+            }
+        });
+
+
         if(currentAmbition!=null){
-            ToastUtil.showMessage(this, currentAmbition.getTitle()+";"+currentAmbition.getObjectId()+"" );
+
+            ambitionText.setText(currentAmbition.getTitle());
+            beginText.setText("开始日期：" + currentAmbition.getBeginTime());
+            endText.setText("结束日期："+currentAmbition.getEndTime());
+            privateCheckBox.setChecked((boolean) currentAmbition.isPersonal());
+            author = currentAmbition.getAuthor();
+            commenter=BmobUser.getCurrentUser(this,User.class);
+            AmbitionAPP.getInstance().getImageLoader().loadBigPic(author.getUser_img_url(), 100, new ImageLoader.BigImageCallback() {
+                @Override
+                public void imageLoaded(String url, final Bitmap bmp) {
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            authorImg.setImageBitmap(bmp);
+                        }
+                    });
+
+
+                }
+            });
+            authorName.setText(author.getNickName());
+            if (isUserSAmbition()) {
+                sendBtn.setText("签到");
+            } else {
+                sendBtn.setText("评论");
+            }
 
         }
+        if(currentAmbition!=null){
+            beginDate=AmbitionDate.getDateFromStr(currentAmbition.getBeginTime());
+            endDate=AmbitionDate.getDateFromStr(currentAmbition.getEndTime());
+
+        }
+
     }
+
+
 
     @Override
     public void findViews() {
@@ -211,12 +302,28 @@ public class AmbitionDetailActivity extends  BaseActivity{
                     sendBtn.setClickable(true);
                     sendBtn.setEnabled(true);
 
+                    if (commentHeadString != null) {
+                        //此操作可将@的人去掉
+                        if (s.length() == commentHeadString.length() - 1) {
+
+                            if (s.toString().contains(commentHeadString.replace(" ", ""))) {
+
+                                commentEditText.setText("");
+                                toCommenter = null;
+                            }
+                        }
+                    }
 
                 }else{
-                    sendBtn.setText("发表");
-                    //重置
-                    // toCommenter=null;
 
+                    if (isUserSAmbition()) {
+                        sendBtn.setText("签到");
+                    } else {
+                        sendBtn.setText("评论");
+                    }
+
+                    //重置
+                    toCommenter = null;
                 }
             }
 
@@ -237,11 +344,17 @@ public class AmbitionDetailActivity extends  BaseActivity{
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Comment comment = (Comment)adapter.getItem(position);
-                toCommenter=comment.getCommenter();
-                commentEditText.setText("回复:"+"@"+toCommenter.getNickName()+" ");
-                sendBtn.setText("回复");
-                commentEditText.requestFocus();
-                showInput();
+                if(!comment.getCommenter().getObjectId().equals(commenter.getObjectId())){
+                    toCommenter=comment.getCommenter();
+                    commentHeadString="回复:"+"@"+toCommenter.getNickName()+" ";
+                    commentEditText.setText(commentHeadString);
+                    comment_Length=commentHeadString.length();
+                    sendBtn.setText("回复");
+                    commentEditText.requestFocus();
+                    showInput();
+                }else{
+                    toCommenter=null;
+                }
 
             }
         });
@@ -256,28 +369,28 @@ public class AmbitionDetailActivity extends  BaseActivity{
         initAVD();
 
 
-        final BmobQuery<Comment> query = new BmobQuery<Comment>();
-
-
-        query.addWhereEqualTo("ambition", new BmobPointer(currentAmbition));
-        query.include("commenter");
-        //降序排序
-        query.order("-createdAt");
-        query.findObjects(this, new FindListener<Comment>() {
-            @Override
-            public void onSuccess(List<Comment> list) {
-                comments.addAll(list);
-                adapter=new CommentAdapter(AmbitionDetailActivity.this,comments);
-                comment_listview.setAdapter(adapter);
-                progress_layout.setVisibility(View.GONE);
-                changeListViewHeight();
-            }
-
-            @Override
-            public void onError(int i, String s) {
-                getAgain.setText("获取评论失败，点击重新获取");
-            }
-        });
+//        final BmobQuery<Comment> query = new BmobQuery<Comment>();
+//
+//
+//        query.addWhereEqualTo("ambition", new BmobPointer(currentAmbition));
+//        query.include("commenter");
+//        //降序排序
+//        query.order("-createdAt");
+//        query.findObjects(this, new FindListener<Comment>() {
+//            @Override
+//            public void onSuccess(List<Comment> list) {
+//                comments.addAll(list);
+//                adapter=new CommentAdapter(AmbitionDetailActivity.this,comments);
+//                comment_listview.setAdapter(adapter);
+//                progress_layout.setVisibility(View.GONE);
+//                changeListViewHeight();
+//            }
+//
+//            @Override
+//            public void onError(int i, String s) {
+//                getAgain.setText("获取评论失败，点击重新获取");
+//            }
+//        });
 
 
         sendBtn.setOnClickListener(new View.OnClickListener() {
@@ -303,7 +416,12 @@ public class AmbitionDetailActivity extends  BaseActivity{
                 adapter.notifyDataSetChanged();
                 changeListViewHeight();
                 commentEditText.setText("");
-                sendBtn.setText("发表");
+
+                if(isUserSAmbition()){
+                    sendBtn.setText("签到");
+                }else{
+                    sendBtn.setText("评论");
+                }
 
 
                 final BmobPushManager bmobPushManager = new BmobPushManager(AmbitionDetailActivity.this);
@@ -327,11 +445,12 @@ public class AmbitionDetailActivity extends  BaseActivity{
                                 if(toCommenter!=null){
                                     query.addWhereEqualTo("receiverId", toCommenter.getObjectId());
                                     commentContent="有人在评论中@了你："+comment.getContent();
-                                    type="";
+                                    type="talkAbout";
 
                                 }else{
                                     query.addWhereEqualTo("receiverId", author.getObjectId());
                                     commentContent="有人评论了你的目标："+comment.getContent();
+                                    type="comment";
                                 }
 
                                 JSONObject pushObject= new JSONObject();
@@ -345,7 +464,10 @@ public class AmbitionDetailActivity extends  BaseActivity{
                                     //评论内容
                                     pushObject.put("detail", comment.getContent());
                                     //评论类型 回复还是评论
-                                    pushObject.put("type", comment.getContent());
+                                    pushObject.put("type", type);
+
+                                    ThemeColorUtil.saveColor(AmbitionDetailActivity.this, "ambition", "ambitionID", currentAmbition.getObjectId());
+
 
                                 } catch (JSONException e) {
                                     e.printStackTrace();
@@ -365,11 +487,15 @@ public class AmbitionDetailActivity extends  BaseActivity{
                                             ToastUtil.showMessage(AmbitionDetailActivity.this,"推送失败"+s);
                                         }
                                     });
-                                }
+                                 }
 
-
+                                toCommenter=null;
                                 commentEditText.setText("");
-                                sendBtn.setText("发表");
+                                if(isUserSAmbition()){
+                                    sendBtn.setText("签到");
+                                }else{
+                                    sendBtn.setText("评论");
+                                }
                             }
 
                             @Override
@@ -422,7 +548,22 @@ public class AmbitionDetailActivity extends  BaseActivity{
                 break;
         }
     }
+    //判断是自己的目标还是别人的目标，显示是签到还是回复
+    public boolean isUserSAmbition(){
+        boolean flag=false;
+        //如果是
+        if(commenter!=null&&author!=null){
+            if(commenter.getObjectId().equals(author.getObjectId())){
+                flag=true;
+            }else{
 
+
+                flag=false;
+            }
+        }
+
+        return  flag;
+    }
     //重新获取评论列表
     public void getCommentData(View v ){
 
@@ -481,9 +622,15 @@ public class AmbitionDetailActivity extends  BaseActivity{
             listItem.measure(0, 0);
             totalHeight+=listItem.getMeasuredHeight();
         }
-        ViewGroup.LayoutParams params = comment_listview.getLayoutParams();
+      final   ViewGroup.LayoutParams params = comment_listview.getLayoutParams();
         params.height = totalHeight+(comment_listview.getDividerHeight()*adapter.getCount());
-        comment_listview.setLayoutParams(params);
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                comment_listview.setLayoutParams(params);
+            }
+        });
+
     }
 
 
@@ -534,38 +681,37 @@ public class AmbitionDetailActivity extends  BaseActivity{
 
     @Override
     public void getData() {
-
-
-        if(currentAmbition!=null){
-
-            ambitionText.setText(currentAmbition.getTitle());
-            beginText.setText("开始日期：" + currentAmbition.getBeginTime());
-            endText.setText("结束日期："+currentAmbition.getEndTime());
-            privateCheckBox.setChecked((boolean) currentAmbition.isPersonal());
-            author = currentAmbition.getAuthor();
-            commenter=BmobUser.getCurrentUser(this,User.class);
-
-            //判断该目标创建人是否为本机用户
-//        if(author.getObjectId().equals(commenter.getObjectId())){
-//            commentEditText.setVisibility(View.GONE);
-//            sendBtn.setVisibility(View.GONE);
+//        if(isUserSAmbition()){
+//            sendBtn.setText("签到");
+//        }else{
+//
+//            sendBtn.setText("评论");
 //        }
-            AmbitionAPP.getInstance().getImageLoader().loadBigPic(author.getUser_img_url(), 100, new ImageLoader.BigImageCallback() {
-                @Override
-                public void imageLoaded(String url, final Bitmap bmp) {
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            authorImg.setImageBitmap(bmp);
-                        }
-                    });
 
-
-                }
-            });
-            authorName.setText(author.getNickName());
-
-        }
+//        if(currentAmbition!=null){
+//
+//            ambitionText.setText(currentAmbition.getTitle());
+//            beginText.setText("开始日期：" + currentAmbition.getBeginTime());
+//            endText.setText("结束日期："+currentAmbition.getEndTime());
+//            privateCheckBox.setChecked((boolean) currentAmbition.isPersonal());
+//            author = currentAmbition.getAuthor();
+//            commenter=BmobUser.getCurrentUser(this,User.class);
+//            AmbitionAPP.getInstance().getImageLoader().loadBigPic(author.getUser_img_url(), 100, new ImageLoader.BigImageCallback() {
+//                @Override
+//                public void imageLoaded(String url, final Bitmap bmp) {
+//                    runOnUiThread(new Runnable() {
+//                        @Override
+//                        public void run() {
+//                            authorImg.setImageBitmap(bmp);
+//                        }
+//                    });
+//
+//
+//                }
+//            });
+//            authorName.setText(author.getNickName());
+//
+//        }
 
 
 

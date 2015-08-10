@@ -55,49 +55,59 @@ public class MyPushMessageReceiver extends PushReceiver {
 
            final Intent notificationIntent = new Intent();
 
-//            notificationIntent.setClass(context, AmbitionDetailActivity.class);
-            notificationIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP
-                    |Intent.FLAG_ACTIVITY_NEW_TASK);
+
            JSONObject jsonObject =null;
 
             try {
 
                 jsonObject=new JSONObject(message);
-               final  String commenter= jsonObject.getString("commenter");
-                final String ambition_title = jsonObject.getString("ambition");
-               final  String detail = jsonObject.getString("detail");
 
-                final String ambitionID=jsonObject.getString("ambitionID");
+                final String type = jsonObject.getString("type");
+                if(type.equals("feedback")){
+                   // notificationIntent.setClass(context, AmbitionDetailActivity.class);
+                    notificationIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP
+                            |Intent.FLAG_ACTIVITY_NEW_TASK);
+                    final String feedbacker = jsonObject.getString("feedbacker");
+                    final String detail = jsonObject.getString("feedback");
 
-                BmobQuery<Ambition> query = new BmobQuery<Ambition>();
-                query.include("author");
-                query.getObject(context, ambitionID, new GetListener<Ambition>() {
-                    @Override
-                    public void onSuccess(Ambition ambition) {
-                        if(ambition!=null){
-                            Bundle bundle = new Bundle();
-                            bundle.putSerializable("ambition", ambition);
-                            notificationIntent.putExtras(bundle);
-                            //notificationIntent.putExtra("bundle",bundle);
-                            notificationIntent.putExtra("ambition",ambition);
-                            notificationIntent.putExtra("ambitionID",ambition.getTitle());
-                            notificationIntent.putExtra("MODE", "1");
-                            final  PendingIntent pi = PendingIntent.getActivity(context, 0, notificationIntent, 0);
+                    final  PendingIntent pi = PendingIntent.getActivity(context, 0, notificationIntent, 0);
 
-                            notification.setLatestEventInfo(context, ambition.getTitle()+commenter+ "评论了你", detail, pi);
-                            notification.defaults |= Notification.DEFAULT_SOUND;
-                            notification.flags = Notification.FLAG_AUTO_CANCEL;
-                            nm.notify(1, notification);
-                        }
 
-                        //ToastUtil.showMessage(context,"ambition==null? result="+(ambition==null)+ambition.getTitle());
+                        notification.setLatestEventInfo(context, feedbacker+"发来一条反馈", detail, pi);
+
+
+
+
+                }else{
+
+                    notificationIntent.setClass(context, AmbitionDetailActivity.class);
+                    notificationIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP
+                            |Intent.FLAG_ACTIVITY_NEW_TASK);
+
+
+                    final  String commenter= jsonObject.getString("commenter");
+                    final String ambition_title = jsonObject.getString("ambition");
+                    final  String detail = jsonObject.getString("detail");
+
+                    final String ambitionID=jsonObject.getString("ambitionID");
+
+                    notificationIntent.putExtra("ambitionID", ThemeColorUtil.getData(context,"ambition","ambitionID"));
+                    notificationIntent.putExtra("ambitionTitle",ambitionID);
+                    notificationIntent.putExtra("MODE", "1");
+                    final  PendingIntent pi = PendingIntent.getActivity(context, 0, notificationIntent, 0);
+
+                    if(type.equals("talkAbout")){
+                        notification.setLatestEventInfo(context, commenter+ "@了你", detail, pi);
+
+                    }else if(type.equals("comment")){
+                        notification.setLatestEventInfo(context, commenter+ "评论了你", detail, pi);
+
                     }
+                }
 
-                    @Override
-                    public void onFailure(int i, String s) {
-
-                    }
-                });
+                notification.defaults |= Notification.DEFAULT_SOUND;
+                notification.flags = Notification.FLAG_AUTO_CANCEL;
+                nm.notify(1, notification);
 
 
             } catch (JSONException e) {
