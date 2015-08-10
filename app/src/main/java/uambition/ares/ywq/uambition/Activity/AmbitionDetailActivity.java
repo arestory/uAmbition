@@ -474,6 +474,7 @@ public class AmbitionDetailActivity extends  BaseActivity{
                                 }
                                 bmobPushManager.setQuery(query);
 
+                                //
                                 //如果是自己的目标，评论则不推送
                                 if(!commenter.getObjectId().equals(author.getObjectId())){
                                     bmobPushManager.pushMessage(pushObject, new PushListener() {
