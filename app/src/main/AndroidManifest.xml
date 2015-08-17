@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    android:versionCode="1"
-    android:versionName="1.0.0"
+    android:versionCode="40"
+    android:versionName="1.0.3"
     package="uambition.ares.ywq.uambition" >
 
 
@@ -48,7 +48,13 @@
             android:screenOrientation="portrait" >
         </activity>
         <activity
+            android:name=".Activity.GuideActivity"
+            android:screenOrientation="portrait" >
+
+        </activity>
+        <activity
             android:name=".Activity.EditUserNameActivity"
+            android:theme="@style/TranslucentTheme"
             android:screenOrientation="portrait" >
         </activity>
         <activity
@@ -65,6 +71,7 @@
         </activity>
         <activity
             android:name=".Activity.AmbitionDetailActivity"
+            android:theme="@style/TranslucentTheme"
             android:launchMode="singleTask"
             android:screenOrientation="portrait" >
         </activity>
@@ -78,10 +85,12 @@
         </activity>
         <activity
             android:name=".Activity.AddAmbitionActivity"
+            android:theme="@style/TranslucentTheme"
             android:screenOrientation="portrait" >
         </activity>
         <activity
             android:name=".Activity.UserDetailActivity"
+            android:theme="@style/TranslucentTheme"
             android:screenOrientation="portrait"  >
         </activity>
 
@@ -89,6 +98,7 @@
         <!--android:configChanges="orientation|keyboardHidden"-->
         <activity
             android:name=".Activity.AmbitionActivity"
+            android:theme="@style/TranslucentTheme"
             android:screenOrientation="portrait" >
         </activity>
         <activity
@@ -100,6 +110,11 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+            <!--<intent-filter>-->
+                <!--<action android:name="android.intent.action.MAIN" />-->
+
+                <!--<category android:name="android.intent.category.LAUNCHER" />-->
+            <!--</intent-filter>-->
         </activity>
 
         <service

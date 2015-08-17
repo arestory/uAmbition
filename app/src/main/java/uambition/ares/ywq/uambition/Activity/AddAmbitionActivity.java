@@ -1,5 +1,7 @@
 package uambition.ares.ywq.uambition.Activity;
 
+import android.app.AlertDialog;
+import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.view.View;
@@ -17,9 +19,12 @@ import cn.bmob.v3.listener.SaveListener;
 import uambition.ares.ywq.uambition.R;
 import uambition.ares.ywq.uambition.Util.TitleBarUtil;
 import uambition.ares.ywq.uambition.Util.ToastUtil;
+import uambition.ares.ywq.uambition.Util.Util;
+import uambition.ares.ywq.uambition.Util.slidr.Slidr;
 import uambition.ares.ywq.uambition.bean.Ambition;
 import uambition.ares.ywq.uambition.bean.AmbitionDate;
 import uambition.ares.ywq.uambition.bean.User;
+import uambition.ares.ywq.uambition.view.AmbitionDialog;
 import uambition.ares.ywq.uambition.view.datepicker.date.DatePickerDialog;
 
 /**
@@ -114,6 +119,8 @@ public class AddAmbitionActivity extends BaseActivity {
     @Override
     public void setContentView() {
         final Intent intent=getIntent();
+        //设置滑动退出
+        Slidr.attach(this);
         if(intent!=null){
 
             newAmbition = (Ambition)intent.getSerializableExtra("ambition");
@@ -125,6 +132,8 @@ public class AddAmbitionActivity extends BaseActivity {
         user=BmobUser.getCurrentUser(this,User.class);
         setContentView(R.layout.activity_add_ambition);
         initDatePicker();
+
+
         final ProgressDialog dialog=new ProgressDialog(AddAmbitionActivity.this);
         dialog.setMessage("正在提交...");
 
@@ -140,7 +149,8 @@ public class AddAmbitionActivity extends BaseActivity {
             public void rightBtnClickLister() {
 
                 if(endDate!=null){
-                    dialog.show();
+                    final AmbitionDialog alertDialog=Util.showDialog(AddAmbitionActivity.this,"正在提交");
+                    //dialog.show();
                     String content = ambitionText.getText().toString();
                     newAmbition.setPersonal(privateCheckBox.isChecked());
                     newAmbition.setTitle(content);
@@ -155,6 +165,7 @@ public class AddAmbitionActivity extends BaseActivity {
                         @Override
                         public void onSuccess() {
                             dialog.dismiss();
+                            Util.cancelDialog(alertDialog);
                             Intent intent1 = new Intent(AddAmbitionActivity.this, MainActivity.class);
                             intent1.putExtra("ambition", newAmbition);
 
@@ -166,6 +177,7 @@ public class AddAmbitionActivity extends BaseActivity {
                         @Override
                         public void onFailure(int i, String s) {
                             dialog.dismiss();
+                            Util.cancelDialog(alertDialog);
                             ToastUtil.showMessage(AddAmbitionActivity.this, "提交失败" + s + ":" + i);
 
                         }

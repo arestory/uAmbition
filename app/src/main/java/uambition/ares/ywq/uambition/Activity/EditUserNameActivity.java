@@ -12,6 +12,7 @@ import cn.bmob.v3.listener.UpdateListener;
 import uambition.ares.ywq.uambition.R;
 import uambition.ares.ywq.uambition.Util.TitleBarUtil;
 import uambition.ares.ywq.uambition.Util.ToastUtil;
+import uambition.ares.ywq.uambition.Util.slidr.Slidr;
 import uambition.ares.ywq.uambition.bean.User;
 
 /**
@@ -30,6 +31,8 @@ public class EditUserNameActivity extends BaseActivity {
     public void setContentView() {
 
         setContentView(R.layout.activity_edit_username);
+        //设置滑动退出
+        Slidr.attach(this);
         user= BmobUser.getCurrentUser(this,User.class);
         dialog=new ProgressDialog(this);
         dialog.setMessage("正在修改昵称");

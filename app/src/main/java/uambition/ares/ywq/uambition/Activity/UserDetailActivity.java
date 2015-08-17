@@ -44,6 +44,7 @@ import uambition.ares.ywq.uambition.Util.ImageLoader;
 import uambition.ares.ywq.uambition.Util.TitleBarUtil;
 import uambition.ares.ywq.uambition.Util.ToastUtil;
 import uambition.ares.ywq.uambition.Util.Util;
+import uambition.ares.ywq.uambition.Util.slidr.Slidr;
 import uambition.ares.ywq.uambition.adapter.MenuListAdapter;
 import uambition.ares.ywq.uambition.bean.MenuItemBean;
 import uambition.ares.ywq.uambition.bean.User;
@@ -87,6 +88,8 @@ public class UserDetailActivity extends  BaseActivity {
         setContentView(R.layout.activity_user_detail);
         currentUser= BmobUser.getCurrentUser(this,User.class);
         activity=this;
+        //设置滑动退出
+        Slidr.attach(this);
     }
 
     @Override

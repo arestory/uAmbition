@@ -28,6 +28,14 @@ import android.os.Looper;
 import android.util.Log;
 import android.widget.Toast;
 
+import cn.bmob.v3.BmobUser;
+import cn.bmob.v3.listener.SaveListener;
+import uambition.ares.ywq.uambition.Activity.MainActivity;
+import uambition.ares.ywq.uambition.Activity.UserDetailActivity;
+import uambition.ares.ywq.uambition.bean.CrashLog;
+import uambition.ares.ywq.uambition.bean.User;
+import uambition.ares.ywq.uambition.view.AmbitionDialog;
+
 /**
  * ClassName: CrashHandler Function:
  * UncaughtException处理类,当程序发生Uncaught异常的时候,由该类来接管程序,并记录发送错误报告.
@@ -203,14 +211,14 @@ public class CrashHandler implements UncaughtExceptionHandler {
 			public void run() {
 				Looper.prepare();
 				Intent intent=new Intent();
-//				intent.setClass(mContext, CrashActivity.class);
-//				intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+				intent.setClass(mContext, UserDetailActivity.class);
+				intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 //
-				// mContext.startActivity(intent);
+				 //mContext.startActivity(intent);
 				//((Activity)mContext).finish();
 
 //				//" context isActivity="+isActivity+","+((Activity)mContext).getClass().getName()
-				Toast.makeText(mContext, "很抱歉,程序出现异常,即将退出", Toast.LENGTH_SHORT).show();
+ 				Toast.makeText(mContext, "程序好像出了点问题？！", Toast.LENGTH_SHORT).show();
 
 				Looper.loop();
 			}
@@ -306,6 +314,7 @@ public class CrashHandler implements UncaughtExceptionHandler {
 		mPrintWriter.close();
 		String mResult = mWriter.toString();
 		mStringBuffer.append(mResult);
+
 		// 保存文件，设置文件名
 		String mTime = mSimpleDateFormat.format(new Date());
 		String mFileName = "CrashLog-" + mTime + ".log";
@@ -318,6 +327,28 @@ public class CrashHandler implements UncaughtExceptionHandler {
 				FileOutputStream mFileOutputStream = new FileOutputStream(mDirectory + "/" + mFileName);
 				mFileOutputStream.write(mStringBuffer.toString().getBytes());
 				mFileOutputStream.close();
+
+				User user= BmobUser.getCurrentUser(mContext,User.class);
+				CrashLog log = new CrashLog();
+				log.setUserName(user.getNickName());
+				log.setUserPhone(user.getPhoneNumber());
+				log.setCrashDetail(mResult);
+				//final AmbitionDialog dialog=Util.showDialog(mContext, "正在保存异常日志");
+				log.save(mContext, new SaveListener() {
+					@Override
+					public void onSuccess() {
+						ToastUtil.showMessage(mContext, "正在保存");
+						//Util.cancelDialog(dialog);
+					}
+
+					@Override
+					public void onFailure(int i, String s) {
+
+						ToastUtil.showMessage(mContext, "上传失败" + i + ";" + s);
+						//Util.cancelDialog(dialog);
+					}
+				});
+
 				return mFileName;
 			} catch (FileNotFoundException e) {
 				e.printStackTrace();

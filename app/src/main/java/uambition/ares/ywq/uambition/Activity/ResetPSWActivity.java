@@ -20,6 +20,7 @@ import cn.bmob.v3.listener.UpdateListener;
 import uambition.ares.ywq.uambition.R;
 import uambition.ares.ywq.uambition.Util.TitleBarUtil;
 import uambition.ares.ywq.uambition.Util.ToastUtil;
+import uambition.ares.ywq.uambition.Util.slidr.Slidr;
 import uambition.ares.ywq.uambition.bean.User;
 
 /** 修改密码的Activity
@@ -56,6 +57,8 @@ public class ResetPSWActivity extends BaseActivity {
             phoneNum=getIntent().getStringExtra("phone");
         }
 
+        //设置滑动退出
+        Slidr.attach(this);
     }
 
     @Override

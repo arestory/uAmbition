@@ -12,11 +12,13 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.support.design.widget.FloatingActionButton;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -35,6 +37,7 @@ import uambition.ares.ywq.uambition.Util.ToastUtil;
 import uambition.ares.ywq.uambition.adapter.AmbitionListAdapter;
 import uambition.ares.ywq.uambition.bean.Ambition;
 import uambition.ares.ywq.uambition.bean.AmbitionDate;
+import uambition.ares.ywq.uambition.view.monindicator.MonIndicator;
 
 /**
  * Created by ares on 15/7/22.
@@ -52,6 +55,7 @@ public class MainFragment  extends Fragment{
     private ProgressBar loadBar;
     private LinearLayout progress_layout;
     private LinearLayout tips_layout;
+    private MonIndicator monIndicator;
 
     public static final int ADD_AMBITION=1000;
     public static final int EDIT_AMBITION=1001;
@@ -135,11 +139,18 @@ public class MainFragment  extends Fragment{
 
 
     private void initMainList(View view){
+
+
+
         loadBar=(ProgressBar)view.findViewById(R.id.loadBar);
 
         progress_layout=(LinearLayout)view.findViewById(R.id.progress_layout);
         tips_layout=(LinearLayout)view.findViewById(R.id.tips_layout);
 
+        monIndicator =(MonIndicator)view.findViewById(R.id.monIndicator);
+        int color = activity.getThemeColor();
+
+        monIndicator.setColors(new int[ ]{color,color,color,color,color});
 
         //initDatePicker();
         addHabitBtn=(FloatingActionButton)view.findViewById(R.id.addHabit);
@@ -234,7 +245,7 @@ public class MainFragment  extends Fragment{
 
 
                 progress_layout.setVisibility(View.GONE);
-                if(habitList.size()==0){
+                if (habitList.size() == 0) {
                     tips_layout.setVisibility(View.VISIBLE);
                     mainListView.setVisibility(View.GONE);
                 }
@@ -272,7 +283,40 @@ public class MainFragment  extends Fragment{
         });
         registerForContextMenu(mainListView);
 
+
+        mainListView.setOnScrollListener(new AbsListView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(AbsListView view, int scrollState) {
+
+                if(scrollState==SCROLL_STATE_FLING){
+
+                    addHabitBtn.setVisibility(View.VISIBLE);
+                }else if(scrollState==SCROLL_STATE_TOUCH_SCROLL){
+
+                    addHabitBtn.setVisibility(View.GONE);
+
+                }else {
+
+                    addHabitBtn.setVisibility(View.VISIBLE);
+                }
+
+            }
+
+            @Override
+            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+
+
+
+
+
+
+
+            }
+        });
+
     }
+
+    int scrollY=0;
     /**
      * 得到根Fragment
      *

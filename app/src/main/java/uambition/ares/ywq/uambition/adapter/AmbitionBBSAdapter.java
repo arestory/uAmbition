@@ -25,6 +25,7 @@ import uambition.ares.ywq.uambition.bean.Ambition;
 import uambition.ares.ywq.uambition.bean.AmbitionDate;
 import uambition.ares.ywq.uambition.bean.User;
 import uambition.ares.ywq.uambition.view.CircularImageView;
+import uambition.ares.ywq.uambition.view.UserDialog;
 
 /**
  * Created by ares on 15/7/27.
@@ -130,6 +131,14 @@ public class AmbitionBBSAdapter extends BaseAdapter {
             holder.favoriteNum.setText(ambition.getFavorite_num()+"人");
 
 
+        holder.user_img.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                UserDialog.Builder builder = new UserDialog.Builder(context,ambition.getAuthor());
+                builder.setMessage(ambition.getAuthor().getNickName());
+               // builder.create().show();
+            }
+        });
 
         holder.favorite.setOnClickListener(new View.OnClickListener() {
             @Override

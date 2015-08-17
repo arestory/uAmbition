@@ -61,6 +61,11 @@ import uambition.ares.ywq.uambition.view.CircularImageView;
 
 
 public class MainActivity extends BaseActivity {
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+    }
+
     private Toolbar toolbar;
     private ListView menuListView,mainListView;
     private SwipeRefreshLayout refreshLayout;
@@ -197,6 +202,11 @@ public FragmentManager getManager(){
 
 
 
+    public BbsFragment getBbsFragment(){
+
+        return  bbsFragment;
+    }
+
     public BmobPushManager getPushManager(){
 
         return  bmobPushManager;
@@ -316,7 +326,7 @@ public FragmentManager getManager(){
         feedItem.setTitle("反馈");
 
         MenuItemBean moreItem = new MenuItemBean();
-        moreItem.setTitle("关于uAmbition");
+        moreItem.setTitle("关于目标行者");
         moreItem.setImgResId(R.drawable.more);
         moreItem.setFragment(moreFragment);
 
@@ -486,8 +496,10 @@ public FragmentManager getManager(){
         //设置侧滑
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer);
+
         ActionBarDrawerToggle mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, toolbar, R.string.open,
                 R.string.close);
+
        // mDrawerLayout.setScrimColor(getResources().getColor(R.color.white));
         mDrawerToggle.syncState();
         mDrawerLayout.setDrawerListener(mDrawerToggle);

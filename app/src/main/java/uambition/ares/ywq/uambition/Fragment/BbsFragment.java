@@ -1,6 +1,7 @@
 package uambition.ares.ywq.uambition.Fragment;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -30,6 +31,8 @@ import uambition.ares.ywq.uambition.Util.ToastUtil;
 import uambition.ares.ywq.uambition.adapter.AmbitionBBSAdapter;
 import uambition.ares.ywq.uambition.bean.Ambition;
 import uambition.ares.ywq.uambition.bean.Comment;
+import uambition.ares.ywq.uambition.view.jp.co.recruit_lifestyle.android.widget.WaveSwipeRefreshLayout;
+import uambition.ares.ywq.uambition.view.monindicator.MonIndicator;
 
 /**
  * Created by ares on 15/7/22.
@@ -37,12 +40,14 @@ import uambition.ares.ywq.uambition.bean.Comment;
 public class BbsFragment extends Fragment {
 
     private SwipeRefreshLayout refreshLayout;
+    private WaveSwipeRefreshLayout waveRefreshLayout;
     private ListView ambition_bbs_ListView;
     private List<Ambition> ambitionList=new ArrayList<Ambition>();
 
     private ProgressBar loadBar;
     private LinearLayout progress_layout;
 
+    private MonIndicator monIndicator;
     private MainActivity activity;
     private AmbitionBBSAdapter adapter;
     //查询数据
@@ -54,7 +59,7 @@ public class BbsFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view =inflater.inflate(R.layout.fragment_bbs, container, false);
+        View view =inflater.inflate(R.layout.fragment_bbs_new, container, false);
         activity=(MainActivity)getActivity();
         pushManager=activity.getPushManager();
         initView(view);
@@ -115,25 +120,44 @@ public class BbsFragment extends Fragment {
                 null);
         footer_view.setOnClickListener(null);
 
-        refreshLayout=(SwipeRefreshLayout)view.findViewById(R.id.swipe_refresh_layout_main);
-        refreshLayout.setEnabled(true);
-        refreshLayout.setColorSchemeResources(android.R.color.holo_blue_light, android.R.color.holo_green_light, android.R.color.holo_orange_light, android.R.color.holo_red_light);
-        refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener()
+//        refreshLayout=(SwipeRefreshLayout)view.findViewById(R.id.swipe_refresh_layout_main);
+//        refreshLayout.setEnabled(true);
+//        refreshLayout.setColorSchemeResources(android.R.color.holo_blue_light, android.R.color.holo_green_light, android.R.color.holo_orange_light, android.R.color.holo_red_light);
+//        refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener()
+//
+//                                           {
+//
+//                                               @Override
+//                                               public void onRefresh() {
+//
+//
+//                                                   refreshData();
+//                                               }
+//                                           }
+//
+//        );
 
-                                           {
+        waveRefreshLayout = (WaveSwipeRefreshLayout)view.findViewById(R.id.swipe_refresh_layout_main);
+        waveRefreshLayout.setColorSchemeColors(Color.WHITE, Color.WHITE);
+        waveRefreshLayout.setWaveColor(activity.getThemeColor());
+        waveRefreshLayout.setOnRefreshListener(new WaveSwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                refreshData();
+            }
+        });
 
-                                               @Override
-                                               public void onRefresh() {
-
-
-                                                   refreshData();
-                                               }
-                                           }
-
-        );
         ambition_bbs_ListView=(ListView)view.findViewById(R.id.listview_ambition_bbs);
         loadBar=(ProgressBar)view.findViewById(R.id.loadBar);
         progress_layout=(LinearLayout)view.findViewById(R.id.progress_layout);
+
+
+        monIndicator =(MonIndicator)view.findViewById(R.id.monIndicator);
+        int color = activity.getThemeColor();
+
+        monIndicator.setColors(new int[ ]{color,color,color,color,color});
+
+
         //progress_layout.setVisibility(View.GONE);
         ambition_bbs_ListView.addFooterView(footer_view);
         ambition_bbs_ListView.setClickable(false);
@@ -229,6 +253,12 @@ public class BbsFragment extends Fragment {
 
     }
 
+    public  WaveSwipeRefreshLayout getWaveRefreshLayout(){
+
+        return  waveRefreshLayout;
+    }
+
+
 
 
     public void upToloadMoreData(int row){
@@ -252,29 +282,30 @@ public class BbsFragment extends Fragment {
                 if(ambitionList!=null){
                     if ( list.size()==0) {
                         ToastUtil.showMessage(activity, "亲，已经没有更多数据了");
-                        refreshLayout.setRefreshing(false);
+                       // refreshLayout.setRefreshing(false);
+                        waveRefreshLayout.setRefreshing(false);
                         footer_view.setVisibility(View.GONE);
                         return;
                     }else{
 
 
                     }
-                    refreshLayout.setRefreshing(false);
+                   // refreshLayout.setRefreshing(false);
+
+                    waveRefreshLayout.setRefreshing(false);
                     //ambitionList.clear();
                     ambitionList.addAll(list);
                     adapter.notifyDataSetChanged();
                 }
 
                 ;
-                // mainListView.setAdapter(adapter);
-                //refreshLayout.setRefreshing(false);
+
             }
 
             @Override
             public void onError(int i, String s) {
 
-                //ToastUtil.showMessage(activity,"更新失败，请检查网络");
-                //refreshLayout.setRefreshing(false);
+
             }
         });
 
@@ -306,8 +337,12 @@ public class BbsFragment extends Fragment {
 
                 if(ambitionList!=null){
 
-                    refreshLayout.setRefreshing(false);
+                    //refreshLayout.setRefreshing(false);
 
+                    if(ambitionList.size()==list.size()){
+                        ToastUtil.showMessage(activity,"已经是最新数据了");
+                    }
+                    waveRefreshLayout.setRefreshing(false);
 
                     ambitionList=list;
                     adapter=new AmbitionBBSAdapter(activity, ambitionList);
@@ -329,15 +364,13 @@ public class BbsFragment extends Fragment {
                 }
 
                 ;
-                // mainListView.setAdapter(adapter);
-                //refreshLayout.setRefreshing(false);
+
             }
 
             @Override
             public void onError(int i, String s) {
 
-                //ToastUtil.showMessage(activity,"更新失败，请检查网络");
-                //refreshLayout.setRefreshing(false);
+
             }
         });
 

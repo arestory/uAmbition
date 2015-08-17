@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+
+    xmlns:my="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent" android:layout_height="match_parent">
 
     <LinearLayout
@@ -12,16 +13,24 @@
         android:gravity="center"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
+        <uambition.ares.ywq.uambition.view.monindicator.MonIndicator
+            android:id="@+id/monIndicator"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            my:circleRadius="10dp" my:cycle="750"
+            />
         <ProgressBar
             android:id="@+id/loadBar"
             style="?android:progressBarStyleSmall"
 
+            android:visibility="gone"
             android:layout_width="100dp"
             android:layout_height="100dp"/>
 
         <TextView
             android:text="正在获取数据"
             android:gravity="center"
+            android:visibility="gone"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
 

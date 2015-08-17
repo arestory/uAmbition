@@ -19,6 +19,7 @@ import uambition.ares.ywq.uambition.view.holocolorpicker.OpacityBar;
 import uambition.ares.ywq.uambition.view.holocolorpicker.SVBar;
 import uambition.ares.ywq.uambition.view.holocolorpicker.SaturationBar;
 import uambition.ares.ywq.uambition.view.holocolorpicker.ValueBar;
+import uambition.ares.ywq.uambition.view.jp.co.recruit_lifestyle.android.widget.WaveSwipeRefreshLayout;
 
 /**
  * Created by ares on 15/7/22.
@@ -115,6 +116,15 @@ public class SettingFragment extends Fragment {
                     }
 
                 }
+                if(activity.getBbsFragment()!=null){
+                    WaveSwipeRefreshLayout layout = activity.getBbsFragment().getWaveRefreshLayout();
+                    if(layout!=null){
+                        layout.setWaveColor(color);
+                    }
+
+                }
+
+
                 // TitleBarUtil.setBarColor(getActivity(),color);
             }
         });

@@ -27,6 +27,7 @@ import uambition.ares.ywq.uambition.Util.ToastUtil;
 import uambition.ares.ywq.uambition.Util.Util;
 import uambition.ares.ywq.uambition.bean.MyInstall;
 import uambition.ares.ywq.uambition.bean.User;
+import uambition.ares.ywq.uambition.view.HintEditText;
 
 /**
  * Created by ares on 15/7/18.
@@ -45,6 +46,8 @@ public class LoginActivity  extends  BaseActivity{
 
     private TextView registerTextView;
     private TextView forgetPSWTextView;
+
+    private HintEditText testEditText;
     @Override
    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -54,7 +57,7 @@ public class LoginActivity  extends  BaseActivity{
 
     @Override
     public void setContentView() {
-        AppConnect.getInstance("4fc70c42c2ddaef8bae10a92e54dcd17","lenovo",this);
+        AppConnect.getInstance("4fc70c42c2ddaef8bae10a92e54dcd17","xiaomi",this);
 
         //用于WAPS 打包
 //        AppConnect.getInstance(this);
@@ -67,7 +70,10 @@ public class LoginActivity  extends  BaseActivity{
         }
         setContentView(R.layout.activity_login);
 
-
+        testEditText=(HintEditText)findViewById(R.id.test);
+        testEditText.setHint("输入密码");
+        testEditText.setTitle("密码");
+        testEditText.setVisibility(View.GONE);
     }
 
     @Override

@@ -2,31 +2,28 @@
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
 
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:my="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent" android:layout_height="match_parent">
 
     <LinearLayout
         android:id="@+id/progress_layout"
         android:layout_centerVertical="true"
         android:layout_centerHorizontal="true"
-
-
         android:orientation="vertical"
         android:gravity="center"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-
         <uambition.ares.ywq.uambition.view.monindicator.MonIndicator
             android:id="@+id/monIndicator"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:circleRadius="10dp" app:cycle="750"
+            my:circleRadius="10dp" my:cycle="750"
             />
         <ProgressBar
             android:id="@+id/loadBar"
             style="?android:progressBarStyleSmall"
-            android:visibility="gone"
 
+            android:visibility="gone"
             android:layout_width="100dp"
             android:layout_height="100dp"/>
 
@@ -39,24 +36,8 @@
 
     </LinearLayout>
 
-    <LinearLayout
-        android:id="@+id/tips_layout"
-        android:layout_centerVertical="true"
-        android:layout_centerHorizontal="true"
-        android:orientation="vertical"
-        android:gravity="center"
-        android:visibility="gone"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
 
-        <TextView
-            android:text="新增一个目标吧，少年！"
-            android:gravity="center"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
-
-    </LinearLayout>
-   <android.support.v4.widget.SwipeRefreshLayout
+    <uambition.ares.ywq.uambition.view.jp.co.recruit_lifestyle.android.widget.WaveSwipeRefreshLayout
         android:id="@+id/swipe_refresh_layout_main"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -65,29 +46,14 @@
         >
 
         <ListView
-            android:id="@+id/listview_habit"
+            android:id="@+id/listview_ambition_bbs"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:scrollbars="none"
             android:divider="@color/theme_color"
             android:dividerHeight="1px" ></ListView>
 
-    </android.support.v4.widget.SwipeRefreshLayout>
+    </uambition.ares.ywq.uambition.view.jp.co.recruit_lifestyle.android.widget.WaveSwipeRefreshLayout>
 
-    <android.support.design.widget.FloatingActionButton
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        android:id="@+id/addHabit"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="15dp"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentEnd="true"
-        app:backgroundTint="@color/theme_color"
-        android:src="@drawable/write_normal"
-        android:layout_marginBottom="15dp">
-
-
-
-    </android.support.design.widget.FloatingActionButton>
 
 </RelativeLayout>

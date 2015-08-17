@@ -1,6 +1,8 @@
 package uambition.ares.ywq.uambition.Util;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -14,15 +16,22 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.readystatesoftware.systembartint.SystemBarTintManager;
+
+import org.w3c.dom.Text;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import uambition.ares.ywq.uambition.Activity.BaseActivity;
+import uambition.ares.ywq.uambition.Activity.MainActivity;
 import uambition.ares.ywq.uambition.R;
+import uambition.ares.ywq.uambition.view.AmbitionDialog;
+import uambition.ares.ywq.uambition.view.monindicator.MonIndicator;
 
 /**
  * Created by ares on 15/7/18.
@@ -225,6 +234,57 @@ private Context context;
         ConnectivityManager cm = (ConnectivityManager)context. getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo ni = cm.getActiveNetworkInfo();
         return ni != null && ni.isConnectedOrConnecting();
+    }
+
+    public static AmbitionDialog showDialog(Context context,String title) {
+        if (context != null) {
+            View view = ((Activity) context).getLayoutInflater().inflate(
+                    R.layout.ambition_dialog, null);
+            AmbitionDialog loadingDialog =new AmbitionDialog(context,R.style.CustomDialog);
+            loadingDialog.setCancelable(false);
+            loadingDialog.setContentView(view);
+            BaseActivity activity = (BaseActivity)context;
+            MonIndicator monIndicator =(MonIndicator)view.findViewById(R.id.monIndicator);
+            TextView textView =(TextView)view.findViewById(R.id.msg);
+            textView.setText(title);
+            int color = activity.getThemeColor();
+
+            monIndicator.setColors(new int[]{color, color, color, color, color});
+            loadingDialog.show();
+            return loadingDialog;
+        }
+        return null;
+    }
+
+//    public static AlertDialog showDialog(Context context,String title) {
+//        if (context != null) {
+//            View view = ((Activity) context).getLayoutInflater().inflate(
+//                    R.layout.ambition_dialog, null);
+//            AlertDialog loadingDialog = new AlertDialog.Builder(context)
+//                    .setView(view).create();
+//            loadingDialog.setCancelable(false);
+//            BaseActivity activity = (BaseActivity)context;
+//            MonIndicator monIndicator =(MonIndicator)view.findViewById(R.id.monIndicator);
+//            TextView textView =(TextView)view.findViewById(R.id.msg);
+//            textView.setText(title);
+//            int color = activity.getThemeColor();
+//
+//            monIndicator.setColors(new int[]{color, color, color, color, color});
+//            loadingDialog.show();
+//            return loadingDialog;
+//        }
+//        return null;
+//    }
+
+    /**
+     * 隐藏对话框
+     *
+     * @param dialog
+     */
+    public static void cancelDialog(AmbitionDialog dialog) {
+        if (dialog != null && dialog.isShowing()) {
+            dialog.cancel();
+        }
     }
 
 

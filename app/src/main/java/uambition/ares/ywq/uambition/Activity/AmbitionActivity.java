@@ -47,6 +47,7 @@ import uambition.ares.ywq.uambition.Util.ImageLoader;
 import uambition.ares.ywq.uambition.Util.ThemeColorUtil;
 import uambition.ares.ywq.uambition.Util.TitleBarUtil;
 import uambition.ares.ywq.uambition.Util.ToastUtil;
+import uambition.ares.ywq.uambition.Util.slidr.Slidr;
 import uambition.ares.ywq.uambition.adapter.CommentAdapter;
 import uambition.ares.ywq.uambition.bean.Ambition;
 import uambition.ares.ywq.uambition.bean.AmbitionDate;
@@ -168,6 +169,8 @@ public class AmbitionActivity extends  BaseActivity {
     public void setContentView() {
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
        setContentView(R.layout.activity_ambition_detail);
+       //设置滑动退出
+        Slidr.attach(this);
         Intent intent=getIntent();
         if(intent!=null){
 
